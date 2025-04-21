@@ -1,0 +1,9 @@
+{
+	"name": "df-devprojects",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cf1046c7-697c-4fba-93a2-fe4c8b99a33a",
+		"tenantId": "90c0fa28-5905-43d7-9d89-06dafbb378d0"
+	}
+}

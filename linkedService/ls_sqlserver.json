@@ -1,0 +1,21 @@
+{
+	"name": "ls_sqlserver",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "DAMU\\SQLEXPRESS",
+			"database": "Devdbonprem",
+			"encrypt": "optional",
+			"trustServerCertificate": true,
+			"authenticationType": "Windows",
+			"userName": "DAMU\\Bhavya",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhZDFlZjNjYi1hNmUyLTQ3MTMtOWY5ZS02YmJjYTc3NGUxNGEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IR-SELFHOSTED",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

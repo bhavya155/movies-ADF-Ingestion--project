@@ -55,63 +55,41 @@ Tools Used: Azure Data Factory with:
 - Accessible to BI & Data Science teams for analytics
 
 3. Analysis Layer (Querying the Silver Tables)
+
 3.1 Ratings per Year
 
-SELECT YEAR(to_date(timestamp_column)) AS rating_year, COUNT(*) AS total_ratings
-FROM silver_ratings
-GROUP BY rating_year
-ORDER BY rating_year;
+SELECT year(from_unixtime(1377476993)) AS rating_year, COUNT(*) AS total_ratings 
+FROM db_projects.dev.ratings_sv 
+GROUP BY rating 
+ORDER BY rating;
 
 3.2 Rating Distribution
 
-SELECT rating, COUNT(*) AS count
-FROM silver_ratings
-GROUP BY rating
-ORDER BY rating;
+df=spark.sql("SELECT rating, COUNT(*) AS count
+             FROM db_projects.dev.ratings_sv
+             GROUP BY rating 
+             ORDER BY rating")
+df.display()
 
 3.3 18 Movies Tagged but Not Rated
 
-SELECT DISTINCT t.movieId
-FROM silver_tags t
-LEFT JOIN silver_ratings r ON t.movieId = r.movieId
-WHERE r.movieId IS NULL
+SELECT DISTINCT t.movie_id,t.tag 
+FROM db_projects.dev.tags_sv t 
+LEFT JOIN db_projects.dev.ratings_sv r 
+ON t.movie_id = r.movie_id 
+WHERE r.movie_id IS NULL 
 LIMIT 18;
 
 3.4 Top 10 Untagged Rated Movies (30+ Ratings)
 
-SELECT movieId, AVG(rating) AS avg_rating, COUNT(*) AS num_ratings
-FROM silver_ratings
-WHERE movieId NOT IN (SELECT DISTINCT movieId FROM silver_tags)
-GROUP BY movieId
-HAVING COUNT(*) > 30
-ORDER BY avg_rating DESC, num_ratings DESC
+SELECT movie_id, AVG(rating) AS avg_rating, COUNT(*) AS num_ratings 
+FROM db_projects.dev.ratings_sv 
+WHERE movie_id 
+NOT IN (SELECT DISTINCT movie_id FROM db_projects.dev.tags_sv) 
+GROUP BY movie_id 
+HAVING COUNT(*) > 30 
+ORDER BY avg_rating DESC, num_ratings DESC 
 LIMIT 10;
-
-3.5 Tagging Statistics - Average Tags per Movie
-
-SELECT COUNT(*) * 1.0 / COUNT(DISTINCT movieId) AS avg_tags_per_movie
-FROM silver_tags;
-
-3.5 Tagging Statistics - Average Tags per User
-
-SELECT COUNT(*) * 1.0 / COUNT(DISTINCT userId) AS avg_tags_per_user
-FROM silver_tags;
-
-3.5 Tagging Statistics - Avg Tags per User per Movie
-
-SELECT AVG(tag_count) AS avg_tags_per_user_movie
-FROM (
-  SELECT userId, movieId, COUNT(*) AS tag_count
-  FROM silver_tags
-  GROUP BY userId, movieId
-);
-
-3.6 Users Who Tagged but Didn’t Rate
-
-SELECT DISTINCT t.userId
-FROM silver_tags t
-LEFT JOIN silver_ratings r ON t.userId = r.userId AND t.movieId = r.movieId
-WHERE r.rating IS NULL;
 
 ✅ Outcome
 
